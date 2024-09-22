@@ -24,8 +24,19 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment)
     {
-        $this->authorize('delete', $comment);
-        $comment->delete();
-        return response()->noContent();
+        \Log::info('Destroy method called for comment: ' . $comment->id);
+        
+        try {
+            $this->authorize('delete', $comment);
+            \Log::info('Authorization passed for deleting comment: ' . $comment->id);
+            
+            $comment->delete();
+            \Log::info('Comment deleted successfully: ' . $comment->id);
+            
+            return response()->json(['message' => 'Comment deleted successfully'], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting comment: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete comment'], 500);
+        }
     }
 }

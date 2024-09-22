@@ -16,13 +16,9 @@ angular.module('socialMediaApp')
             return !!this.getToken();
         };
 
-        this.getToken = function() {
-            return localStorage.getItem('token'); 
-        };
-
         this.logout = function() {
-            // Instead of $http here, handle the logout directly in your controllers
             this.removeToken();
+            return Promise.resolve(); // Return a resolved promise for consistency
         };
     })
     .factory('AuthInterceptor', function(AuthService, $q, $window) {

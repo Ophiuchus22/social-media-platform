@@ -64,6 +64,7 @@ angular.module('socialMediaApp')
         };
         
         $scope.deleteComment = function(post, comment) {
+            console.log('Deleting comment with ID:', comment.id);
             CommentService.deleteComment(comment.id)
                 .then(function() {
                     var index = post.comments.indexOf(comment);
@@ -72,7 +73,7 @@ angular.module('socialMediaApp')
                 .catch(function(error) {
                     console.error('Error deleting comment:', error);
                 });
-        };
+        };       
         
 
         $scope.errorMessage = '';
