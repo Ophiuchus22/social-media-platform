@@ -29,7 +29,15 @@ class PostController extends Controller
 
         $post = $request->user()->posts()->create($validated);
 
-        return $post->load('user');
+        // Load the post with its relations and add necessary flags
+        $post = Post::with('user')
+        ->withCount('likes')
+        ->findOrFail($post->id);
+
+        $post->can_edit = true; // The creator can always edit their new post
+        $post->is_liked = false; // A new post is not liked by default
+
+        return $post;
     }
 
     public function show(Post $post)

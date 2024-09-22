@@ -25,7 +25,13 @@ angular.module('socialMediaApp')
             console.log('Creating post with content:', $scope.newPost.content);
             PostService.createPost($scope.newPost)
                 .then(function(response) {
-                    $scope.posts.unshift(response.data);
+                    // Assume the server returns the complete post data
+                    var newPost = response.data;
+                    // Ensure editing state and like count are initialized
+                    newPost.editing = false;
+                    newPost.likes_count = newPost.likes_count || 0;
+                    newPost.is_liked = newPost.is_liked || false;
+                    $scope.posts.unshift(newPost);
                     $scope.newPost = {}; // Reset input
                 })
                 .catch(function(error) {
@@ -39,7 +45,7 @@ angular.module('socialMediaApp')
             PostService.updatePost(post.id, post)
                 .then(function(response) {
                     var index = $scope.posts.findIndex(p => p.id === post.id);
-                    $scope.posts[index] = response.data;
+                    $scope.posts[index] = Object.assign({}, $scope.posts[index], response.data);
                     post.editing = false; // Exit editing mode after saving
                 })
                 .catch(function(error) {
