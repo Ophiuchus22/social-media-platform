@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -15,6 +16,7 @@ class PostController extends Controller
         ->get()
         ->map(function ($post) {
             $post->is_liked = $post->likes->contains('user_id', auth()->id());
+            $post->can_edit = $post->user_id === auth()->id();
             return $post;
         });
     }
@@ -37,7 +39,9 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-        $this->authorize('update', $post);
+        if (Auth::id() !== $post->user_id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
         $validated = $request->validate([
             'content' => 'required|string|max:1000',

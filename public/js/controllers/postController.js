@@ -10,6 +10,7 @@ angular.module('socialMediaApp')
                         post.likes_count = post.likes_count || 0;
                         post.is_liked = post.is_liked || false;
                         post.created_at = new Date(post.created_at);
+                        post.editing = false; // Initialize editing state
                         return post;
                     });
                 })
@@ -19,6 +20,7 @@ angular.module('socialMediaApp')
                 });
         };
 
+        // Create post
         $scope.createPost = function() {
             console.log('Creating post with content:', $scope.newPost.content);
             PostService.createPost($scope.newPost)
@@ -32,14 +34,26 @@ angular.module('socialMediaApp')
                 });
         };
 
+        // Update post
         $scope.updatePost = function(post) {
             PostService.updatePost(post.id, post)
                 .then(function(response) {
                     var index = $scope.posts.findIndex(p => p.id === post.id);
                     $scope.posts[index] = response.data;
+                    post.editing = false; // Exit editing mode after saving
+                })
+                .catch(function(error) {
+                    console.error('Error updating post:', error);
+                    $scope.errorMessage = 'Failed to update post. You may not have permission to edit this post.';
                 });
         };
 
+        // Toggle editing mode
+        $scope.editPost = function(post) {
+            post.editing = !post.editing;
+        };
+
+        // Delete post
         $scope.deletePost = function(post) {
             PostService.deletePost(post.id)
                 .then(function() {
@@ -48,6 +62,7 @@ angular.module('socialMediaApp')
                 });
         };
 
+        // Add comment
         $scope.addComment = function(post) {
             if (!post.newComment) return; // Prevent adding empty comments
             CommentService.addComment(post.id, { content: post.newComment })
@@ -63,7 +78,8 @@ angular.module('socialMediaApp')
                     $scope.errorMessage = 'Failed to add comment. Please try again.';
                 });
         };
-        
+
+        // Delete comment
         $scope.deleteComment = function(post, comment) {
             console.log('Deleting comment with ID:', comment.id);
             CommentService.deleteComment(comment.id)
@@ -74,11 +90,11 @@ angular.module('socialMediaApp')
                 .catch(function(error) {
                     console.error('Error deleting comment:', error);
                 });
-        };       
-        
+        };
 
         $scope.errorMessage = '';
 
+        // Toggle like
         $scope.toggleLike = function(post) {
             LikeService.toggleLike(post.id)
                 .then(function(response) {
@@ -92,5 +108,6 @@ angular.module('socialMediaApp')
                 });
         };
 
+        // Load posts on init
         $scope.loadPosts();
     });

@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                             <div class="flex space-x-2">
-                                <button ng-click="post.editing = !post.editing" class="text-gray-400 hover:text-blue-600">
+                                <button ng-if="post.can_edit" ng-click="editPost(post)" class="text-gray-400 hover:text-blue-600">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button ng-click="deletePost(post)" class="text-gray-400 hover:text-red-600">
