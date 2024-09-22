@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="socialMediaApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 h-screen flex items-center justify-center" ng-controller="PostController">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mx-auto">
+
+        <!-- Error Message Section -->
+        <div ng-if="errorMessage" class="bg-red-200 text-red-800 p-2 mb-4 rounded-md">
+            {{ errorMessage }}
+        </div>
+
+        <!-- Post Creation Section -->
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Create a Post</h2>
+        <form ng-submit="createPost()" class="space-y-4 mb-8">
+            <textarea ng-model="newPost.content" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="What's on your mind?"></textarea>
+            <button type="submit" class="w-full py-2 px-4 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <i class="fas fa-paper-plane"></i> Post
+            </button>
+        </form>
+
+        <!-- Displayed Posts Section -->
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Posts</h2>
+        <div class="space-y-4">
+            <div ng-repeat="post in posts" class="bg-gray-50 p-4 rounded-lg shadow-sm border-l-4 border-indigo-500">
+                <div class="flex justify-between items-center">
+                    <p class="font-semibold text-gray-800">{{ post.user.name }}</p>
+                    <div class="flex space-x-2">
+                        <button ng-click="deletePost(post)" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                        <button ng-click="post.editing = true" ng-hide="post.editing" class="text-indigo-600 hover:text-indigo-800">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                </div>
+                <p class="mt-2 text-gray-700">{{ post.content }}</p>
+
+                <div ng-show="post.editing" class="mt-4">
+                    <form ng-submit="updatePost(post); post.editing = false">
+                        <textarea ng-model="post.content" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        <div class="flex justify-between mt-2">
+                            <button type="submit" class="text-green-600 hover:text-green-800">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                            <button ng-click="post.editing = false" type="button" class="text-gray-600 hover:text-gray-800">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="mt-2 flex items-center">
+                    <button ng-click="toggleLike(post)" class="text-indigo-600 hover:text-indigo-800 flex items-center">
+                        <i class="fas" ng-class="{'fa-thumbs-down': post.is_liked, 'fa-thumbs-up': !post.is_liked}"></i>
+                        <span class="ml-1">{{ post.is_liked ? 'Unlike' : 'Like' }} ({{ post.likes_count }})</span>
+                    </button>
+                </div>
+
+                <div ng-repeat="comment in post.comments" class="mt-2 flex justify-between items-center">
+                    <p class="font-semibold">{{ comment.user.name }}: <span class="font-normal">{{ comment.content }}</span></p>
+                    <button ng-click="deleteComment(post, comment)" class="text-red-600 hover:text-red-800">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                
+                <form ng-submit="addComment(post)" class="mt-4">
+                    <input ng-model="post.newComment" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add a comment...">
+                    <button type="submit" class="mt-2 w-full py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <i class="fas fa-comment"></i> Comment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
