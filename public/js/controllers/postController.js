@@ -9,6 +9,7 @@ angular.module('socialMediaApp')
                     $scope.posts = response.data.map(function(post) {
                         post.likes_count = post.likes_count || 0;
                         post.is_liked = post.is_liked || false;
+                        post.created_at = new Date(post.created_at);
                         return post;
                     });
                 })
