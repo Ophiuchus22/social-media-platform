@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewComment;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ class CommentController extends Controller
             'user_id' => $request->user()->id,
             'content' => $validated['content'],
         ]);
+
+        event(new NewComment($post, $comment));
     
         return $comment->load('user');
     }

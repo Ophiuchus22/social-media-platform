@@ -18,6 +18,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        NewPost::class => [
+            CreateNewPostNotification::class,
+        ],
+        NewLike::class => [
+            CreateNewLikeNotification::class,
+        ],
+        NewComment::class => [
+            CreateNewCommentNotification::class,
+        ],
     ];
 
     /**

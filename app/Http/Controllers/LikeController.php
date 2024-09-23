@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Events\NewLike;
 
 class LikeController extends Controller
 {
@@ -19,8 +20,10 @@ class LikeController extends Controller
             $like->delete();
             $isLiked = false;
         } else {
-            $post->likes()->create(['user_id' => $request->user()->id]);
+            $like = $post->likes()->create(['user_id' => $request->user()->id]);
             $isLiked = true;
+
+            event(new NewLike($post, $like));
         }
     
         return response()->json([

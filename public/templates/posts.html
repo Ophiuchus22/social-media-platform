@@ -21,6 +21,26 @@
                     <img src="logo/default.png" alt="User Profile" class="h-8 w-8 rounded-full mr-2"> <!-- Adjust size as needed -->
                     <span>{{ userName }}</span>
                 </a>
+
+                <!-- Notification icon and dropdown -->
+                <!-- <div ng-controller="NotificationController">
+                    <div class="relative">
+                        <div class="notification-icon cursor-pointer" ng-click="toggleNotifications()">
+                            <i class="fa fa-bell"></i>
+                            <span class="badge absolute -top-1 -right-1 bg-red-500 text-white rounded-full px-2 py-1 text-xs" ng-if="notifications.length > 0">
+                                {{ notifications.length }}
+                            </span>
+                        </div>
+                        <div class="notification-dropdown absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10" ng-show="showNotifications">
+                            <div class="py-1">
+                                <div ng-repeat="notification in notifications" class="px-4 py-2 hover:bg-gray-100 cursor-pointer" ng-click="markAsRead(notification)">
+                                    {{ notification.type }} - {{ notification.created_at | date:'medium' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
                 <a href="javascript:void(0)" ng-click="logout()" class="hover:bg-blue-700 p-3 rounded">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>                            

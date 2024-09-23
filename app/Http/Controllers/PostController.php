@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\NewPost;
 
 class PostController extends Controller
 {
@@ -36,6 +37,8 @@ class PostController extends Controller
 
         $post->can_edit = true; // The creator can always edit their new post
         $post->is_liked = false; // A new post is not liked by default
+        
+        event(new NewPost($post));
 
         return $post;
     }
