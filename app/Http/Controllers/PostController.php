@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\NewPost;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -18,7 +19,11 @@ class PostController extends Controller
             ->map(function ($post) {
                 $post->is_liked = $post->likes->contains('user_id', auth()->id());
                 $post->can_edit = $post->user_id === auth()->id();
-                $post->can_delete = $post->user_id === auth()->id(); // Add this line for can_delete
+                $post->can_delete = $post->user_id === auth()->id(); 
+                $post->user->profile_picture = $this->getProfilePictureUrl($post->user->profile_picture);
+                $post->comments->each(function ($comment) {
+                    $comment->user->profile_picture = $this->getProfilePictureUrl($comment->user->profile_picture);
+                });
                 return $post;
             });
     }
@@ -70,5 +75,28 @@ class PostController extends Controller
         $this->authorize('delete', $post);
         $post->delete();
         return response()->noContent();
+    }
+
+    private function getProfilePictureUrl($profilePicture)
+    {
+        if (!$profilePicture) {
+            return asset('logo/default.png');
+        }
+
+        // // Check if the profile picture is a full URL
+        // if (filter_var($profilePicture, FILTER_VALIDATE_URL)) {
+        //     return $profilePicture;
+        // }
+
+        // Construct the full path within the storage directory
+        $fullPath = 'profile_pictures/' . basename($profilePicture);
+
+        // Check if the file exists in the public disk
+        if (Storage::disk('public')->exists($fullPath)) {
+            return Storage::disk('public')->url($fullPath);
+        }
+
+        // If the file doesn't exist, return the default image
+        return asset('logo/default.png');
     }
 }

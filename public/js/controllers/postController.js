@@ -5,6 +5,7 @@ angular.module('socialMediaApp')
         $scope.successMessage = '';
         $scope.errorMessage = '';
         $scope.messageVisible = false;
+        $scope.userProfilePicture = '';
 
         // Display the alert message and automatically hide it after 5 seconds
         $scope.showMessage = function(message, isSuccess) {
@@ -31,9 +32,14 @@ angular.module('socialMediaApp')
                         post.is_liked = post.is_liked || false;
                         post.created_at = new Date(post.created_at);
                         post.editing = false; // Initialize editing state
-                        post.showCommentBox = false; // Initialize comment box hidden
+                        post.showCommentBox = false;
+                        post.user.profile_picture = post.user.profile_picture || '/logo/default.png';
                         return post;
                     });
+                    // Set the current user's profile picture
+                    if ($scope.posts.length > 0 && $scope.posts[0].user) {
+                        $scope.userProfilePicture = $scope.posts[0].user.profile_picture;
+                    }
                 })
                 .catch(function(error) {
                     console.error('Error loading posts:', error);
