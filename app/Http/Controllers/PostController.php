@@ -12,14 +12,15 @@ class PostController extends Controller
     public function index()
     {
         return Post::with(['user', 'comments.user', 'likes'])
-        ->withCount('likes')
-        ->latest()
-        ->get()
-        ->map(function ($post) {
-            $post->is_liked = $post->likes->contains('user_id', auth()->id());
-            $post->can_edit = $post->user_id === auth()->id();
-            return $post;
-        });
+            ->withCount('likes')
+            ->latest()
+            ->get()
+            ->map(function ($post) {
+                $post->is_liked = $post->likes->contains('user_id', auth()->id());
+                $post->can_edit = $post->user_id === auth()->id();
+                $post->can_delete = $post->user_id === auth()->id(); // Add this line for can_delete
+                return $post;
+            });
     }
 
     public function store(Request $request)
@@ -32,10 +33,11 @@ class PostController extends Controller
 
         // Load the post with its relations and add necessary flags
         $post = Post::with('user')
-        ->withCount('likes')
-        ->findOrFail($post->id);
+            ->withCount('likes')
+            ->findOrFail($post->id);
 
         $post->can_edit = true; // The creator can always edit their new post
+        $post->can_delete = true; // The creator can also delete their new post
         $post->is_liked = false; // A new post is not liked by default
         
         event(new NewPost($post));

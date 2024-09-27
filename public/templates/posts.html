@@ -10,52 +10,34 @@
 
 <body class="bg-gray-100" ng-controller="PostController">
     <!-- Navigation Bar -->
-    <nav class="bg-blue-600 text-white p-3 fixed top-0 left-0 right-0 z-10">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center">
-                <img src="/logo/fishbook.png" alt="Fishbook Logo" class="h-11 mr-2">
-                <h1 class="text-2xl font-bold">Fishbonk</h1>
-            </div>
-            <div class="flex space-x-4" ng-controller="MainController">
-                <a href="javascript:void(0)" class="hover:bg-blue-700 p-2 rounded flex items-center">
-                    <img src="logo/default.png" alt="User Profile" class="h-8 w-8 rounded-full mr-2"> <!-- Adjust size as needed -->
-                    <span>{{ userName }}</span>
-                </a>
-
-                <!-- Notification icon and dropdown -->
-                <!-- <div ng-controller="NotificationController">
-                    <div class="relative">
-                        <div class="notification-icon cursor-pointer" ng-click="toggleNotifications()">
-                            <i class="fa fa-bell"></i>
-                            <span class="badge absolute -top-1 -right-1 bg-red-500 text-white rounded-full px-2 py-1 text-xs" ng-if="notifications.length > 0">
-                                {{ notifications.length }}
-                            </span>
-                        </div>
-                        <div class="notification-dropdown absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10" ng-show="showNotifications">
-                            <div class="py-1">
-                                <div ng-repeat="notification in notifications" class="px-4 py-2 hover:bg-gray-100 cursor-pointer" ng-click="markAsRead(notification)">
-                                    {{ notification.type }} - {{ notification.created_at | date:'medium' }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
-                <a href="javascript:void(0)" ng-click="logout()" class="hover:bg-blue-700 p-3 rounded">
-                    <i class="fas fa-sign-out-alt"></i>
-                </a>                            
-            </div>
+    <header class="container mx-auto flex justify-between items-center p-4">
+        <div class="flex items-center cursor-pointer" ng-click="goToPosts()">
+            <img src="/logo/fishbook.png" alt="Fishbook Logo" class="h-11 mr-2">
+            <h1 id="fishbonk" class="text-2xl font-bold">Fishbonk</h1>
         </div>
-    </nav>
+        <div class="flex space-x-4" ng-controller="MainController">
+            <a href="#!/profile" class="hover:bg-blue-700 p-2 rounded flex items-center">
+                <img ng-src="{{ user.profile_picture ? '/storage/profile_pictures/' + user.profile_picture : '/logo/default.png' }}" class="h-8 w-8 rounded-full mr-2" alt="User Profile">
+                {{ userName }}
+            </a>
+            <button ng-click="logout()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
+        </div>
+    </header>
+
+    <!-- Alert/Message Container -->
+    <div class="fixed top-4 right-4 space-y-2" ng-if="messageVisible">
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" ng-if="successMessage">
+            <p>{{ successMessage }}</p>
+        </div>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" ng-if="errorMessage">
+            <p>{{ errorMessage }}</p>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <div class="container mx-auto mt-20 flex justify-center">
         <!-- Main Feed -->
         <div class="w-full lg:w-1/2 px-4">
-            <!-- Error Message Section -->
-            <div ng-if="errorMessage" class="bg-red-100 text-red-800 p-2 mb-4 rounded-md">
-                {{ errorMessage }}
-            </div>
 
             <!-- Post Creation Section -->
             <div class="bg-white rounded-lg border-2 border-gray-300 shadow-lg mb-6">
@@ -82,10 +64,10 @@
                                 </div>
                             </div>
                             <div class="flex space-x-2">
-                                <button ng-if="post.can_edit" ng-click="editPost(post)" class="text-gray-400 hover:text-blue-600">
+                                <button ng-if="post.can_edit" ng-click="editPost(post)" class="text-blue-500 hover:text-blue-700">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button ng-click="deletePost(post)" class="text-gray-400 hover:text-red-600">
+                                <button ng-if="post.can_delete" ng-click="deletePost(post)" class="text-red-500 hover:text-red-700">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -97,10 +79,10 @@
                             <form ng-submit="updatePost(post); post.editing = false">
                                 <textarea ng-model="post.content" required class="mt-1 block w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                                 <div class="flex justify-between mt-2">
-                                    <button type="submit" class="text-blue-600 hover:text-blue-800">
-                                        <i class="fas fa-save"></i> Save
+                                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                        <i class="">Save</i> 
                                     </button>
-                                    <button ng-click="post.editing = false" type="button" class="text-gray-600 hover:text-gray-800">
+                                    <button ng-click="post.editing = false" type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                                         <i class="fas fa-times"></i> Cancel
                                     </button>
                                 </div>
@@ -112,36 +94,36 @@
                                 <i class="fas" ng-class="{'fa-thumbs-down': post.is_liked, 'fa-thumbs-up': !post.is_liked}"></i>
                                 <span class="ml-1">{{ post.is_liked ? 'Unlike' : 'Like' }} ({{ post.likes_count }})</span>
                             </button>
-                            <button class="flex items-center text-gray-500 hover:text-blue-600">
+                            <button ng-click="toggleCommentBox(post)" class="flex items-center text-gray-500 hover:text-blue-600">
                                 <i class="fas fa-comment mr-1"></i> Comment
                             </button>
-                            <!-- <button class="flex items-center text-gray-500 hover:text-blue-600">
-                                <i class="fas fa-share mr-1"></i> Share
-                            </button> -->
                         </div>
 
-                        <div class="mt-4 space-y-2">
-                            <div class="flex items-start" ng-repeat="comment in post.comments">
-                                <div class="bg-gray-100 rounded-lg p-2 flex-grow">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <strong>{{ comment.user.name }}</strong>
-                                            <p>{{ comment.content }}</p>
+                        <!-- Comment Section (Visible only when post.showCommentBox is true) -->
+                        <div ng-if="post.showCommentBox">
+                            <div class="mt-4 space-y-2">
+                                <div class="flex items-start" ng-repeat="comment in post.comments">
+                                    <div class="bg-gray-100 rounded-lg p-2 flex-grow">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <strong>{{ comment.user.name }}</strong>
+                                                <p>{{ comment.content }}</p>
+                                            </div>
+                                            <button ng-click="deleteComment(post, comment)" class="text-gray-500 text-sm hover:text-red-500">
+                                                Delete
+                                            </button>
                                         </div>
-                                        <button ng-click="deleteComment(post, comment)" class="text-gray-500 text-sm hover:text-red-500">
-                                            Delete
-                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <form ng-submit="addComment(post)" class="mt-4 flex items-center">
-                            <input ng-model="post.newComment" required class="flex-grow px-3 py-2 border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Write a comment...">
-                            <button type="submit" class="ml-2 text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
+                            <form ng-submit="addComment(post)" class="mt-4 flex items-center">
+                                <input ng-model="post.newComment" required class="flex-grow px-3 py-2 border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Write a comment...">
+                                <button type="submit" class="ml-2 text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
