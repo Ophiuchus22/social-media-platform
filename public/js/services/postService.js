@@ -15,4 +15,8 @@ angular.module('socialMediaApp')
         this.deletePost = function(postId) {
             return $http.delete('/api/posts/' + postId);
         };
+
+        this.getCurrentUserProfile = function() {
+            return $http.get('/api/current-user-profile');
+        };
     });

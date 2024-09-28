@@ -25,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
     Route::post('/posts/{post}/toggle-like', [LikeController::class, 'toggleLike']);
 
+    Route::get('/current-user-profile', [PostController::class, 'getCurrentUserProfile']);
+
     // New routes for notifications
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::put('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);

@@ -7,6 +7,17 @@ angular.module('socialMediaApp')
         $scope.messageVisible = false;
         $scope.userProfilePicture = '';
 
+        $scope.loadCurrentUserProfile = function() {
+            PostService.getCurrentUserProfile()
+                .then(function(response) {
+                    $scope.userProfilePicture = response.data.profile_picture;
+                })
+                .catch(function(error) {
+                    console.error('Error loading user profile:', error);
+                    $scope.userProfilePicture = '/logo/default.png';
+                });
+        };
+
         // Display the alert message and automatically hide it after 5 seconds
         $scope.showMessage = function(message, isSuccess) {
             $scope.successMessage = isSuccess ? message : '';
@@ -46,16 +57,18 @@ angular.module('socialMediaApp')
                         post.user.profile_picture = post.user.profile_picture || '/logo/default.png';
                         return post;
                     });
-                    // Set the current user's profile picture
-                    if ($scope.posts.length > 0 && $scope.posts[0].user) {
-                        $scope.userProfilePicture = $scope.posts[0].user.profile_picture;
-                    }
+                    // // Set the current user's profile picture
+                    // if ($scope.posts.length > 0 && $scope.posts[0].user) {
+                    //     $scope.userProfilePicture = $scope.posts[0].user.profile_picture;
+                    // }
                 })
                 .catch(function(error) {
                     console.error('Error loading posts:', error);
                     $scope.showMessage('Failed to load posts. Please try again.', false);
                 });
         };
+
+        $scope.loadCurrentUserProfile();
 
         // Create post
         $scope.createPost = function() {

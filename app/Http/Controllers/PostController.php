@@ -77,26 +77,28 @@ class PostController extends Controller
         return response()->noContent();
     }
 
+    public function getCurrentUserProfile()
+    {
+        $user = Auth::user();
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'profile_picture' => $this->getProfilePictureUrl($user->profile_picture)
+        ]);
+    }
+
     private function getProfilePictureUrl($profilePicture)
     {
         if (!$profilePicture) {
             return asset('logo/default.png');
         }
 
-        // // Check if the profile picture is a full URL
-        // if (filter_var($profilePicture, FILTER_VALIDATE_URL)) {
-        //     return $profilePicture;
-        // }
-
-        // Construct the full path within the storage directory
         $fullPath = 'profile_pictures/' . basename($profilePicture);
 
-        // Check if the file exists in the public disk
         if (Storage::disk('public')->exists($fullPath)) {
             return Storage::disk('public')->url($fullPath);
         }
 
-        // If the file doesn't exist, return the default image
         return asset('logo/default.png');
     }
 }
