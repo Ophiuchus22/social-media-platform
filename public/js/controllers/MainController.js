@@ -1,18 +1,29 @@
 angular.module('socialMediaApp')
     .controller('MainController', function($scope, $location, $http, AuthService) {
-        $scope.userName = ''; // Initialize the userName variable
+        $scope.userName = '';
 
-        // Fetch user details
-        $http.get('/api/user', {
-            headers: {
-                'Authorization': 'Bearer ' + AuthService.getToken()
+        function fetchUserData() {
+            if (AuthService.isAuthenticated()) {
+                $http.get('/api/user', {
+                    headers: {
+                        'Authorization': 'Bearer ' + AuthService.getToken()
+                    }
+                }).then(function(response) {
+                    $scope.userName = response.data.name;
+                }).catch(function(error) {
+                    console.error('Error fetching user data:', error);
+                    if (error.status === 401) {
+                        AuthService.logout();
+                        $location.path('/login');
+                    }
+                });
             }
-        }).then(function(response) {
-            $scope.userName = response.data.name; // Assuming the user's name is in the 'name' field
-        }).catch(function(error) {
-            console.error('Error fetching user data:', error);
+        }
+
+        $scope.$on('$routeChangeSuccess', function() {
+            fetchUserData();
         });
-        
+
         $scope.logout = function() {
             $http.post('/api/logout', {}, {
                 headers: {
@@ -23,7 +34,6 @@ angular.module('socialMediaApp')
                 $location.path('/login');
             }).catch(function(error) {
                 console.error('Logout failed', error);
-                // Optionally, still logout on the client-side even if the server request fails
                 AuthService.logout();
                 $location.path('/login');
             });

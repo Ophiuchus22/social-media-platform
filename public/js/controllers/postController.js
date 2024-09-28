@@ -24,6 +24,16 @@ angular.module('socialMediaApp')
             $scope.loadPosts(); // Reload posts when navigating to the page
         };
 
+        $scope.randomKey = Date.now();  // Initialize with the current timestamp
+
+        // After you upload a new profile picture or create a new post, update the key
+        $scope.updateProfilePicture = function() {
+            // Update the user profile picture with a fresh key to bypass the cache
+            $scope.userProfilePicture = "/path/to/new/profile_picture.jpg";
+            $scope.randomKey = Date.now();  // Refresh the random key
+        };
+
+
         $scope.loadPosts = function() {
             PostService.getPosts()
                 .then(function(response) {
@@ -57,7 +67,10 @@ angular.module('socialMediaApp')
                     newPost.is_liked = newPost.is_liked || false;
                     $scope.posts.unshift(newPost);
                     $scope.newPost = {}; // Reset input
-                    $scope.showMessage('Post created successfully!', true); // Show success message
+                   
+                    // Reload posts to update the profile picture and other data
+                    $scope.loadPosts();
+                    $scope.showMessage('Post created successfully!', true);
                 })
                 .catch(function(error) {
                     console.error('Error creating post:', error);

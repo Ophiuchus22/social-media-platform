@@ -9,82 +9,97 @@
     <script src="profileController.js"></script>
     <script src="profileService.js"></script>
 </head>
-<body ng-controller="ProfileController">
-    <header class="container mx-auto flex justify-between items-center p-4">
+<body class="bg-gray-100" ng-controller="ProfileController">
+    <!-- Header -->
+    <header class="container mx-auto flex justify-between items-center p-4 bg-white shadow-md">
         <div class="flex items-center cursor-pointer" ng-click="goToPosts()">
-            <img src="/logo/fishbook.png" alt="Fishbook Logo" class="h-11 mr-2">
-            <h1 id="fishbonk" class="text-2xl font-bold">Fishbonk</h1>
+            <img src="/logo/fishbook.png" alt="Fishbook Logo" class="h-12 mr-3">
+            <h1 id="fishbonk" class="text-3xl font-extrabold text-blue-600">Fishbonk</h1>
         </div>
-        <div class="flex space-x-4" ng-controller="MainController">
-            <a href="#!/profile" class="hover:bg-blue-700 p-2 rounded flex items-center">
-                <img src="{{ user.profile_picture ? '/storage/profile_pictures/' + user.profile_picture : '/logo/default.png' }}" alt="User Profile" class="h-8 w-8 rounded-full mr-2">
-                {{ userName }}
+        <div class="flex space-x-6 items-center" ng-controller="MainController">
+            <a href="#!/profile" class="flex items-center hover:bg-blue-600 hover:text-white p-3 rounded-lg transition-all">
+                <img src="{{ user.profile_picture ? '/storage/profile_pictures/' + user.profile_picture : '/logo/default.png' }}" alt="User Profile" class="h-10 w-10 rounded-full mr-2 shadow-md">
+                <span class="font-medium">{{ userName }}</span>
             </a>
-            <button ng-click="logout()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
+            <button ng-click="logout()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-all">Logout</button>
         </div>
     </header>
 
     <!-- Alert/Message Container -->
     <div class="fixed top-4 right-4 space-y-2" ng-if="messageVisible">
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" ng-if="successMessage">
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-md" ng-if="successMessage">
             <p>{{ successMessage }}</p>
         </div>
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" ng-if="errorMessage">
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md" ng-if="errorMessage">
             <p>{{ errorMessage }}</p>
         </div>
     </div>
 
-
-    <main class="container mx-auto mt-20 flex justify-center">
+    <!-- Main Content -->
+    <main class="container mx-auto mt-16 flex justify-center">
         <div class="w-full lg:w-1/2 px-4">
-            <div class="section bg-white rounded-lg border-2 border-gray-300 shadow-lg mb-6">
-                <div class="p-4">
-                    <div class="flex justify-between items-center">
-                        <h2 id="my-profile" class="text-xl font-bold mb-4 text-gray-800">My Profile</h2>
-                        <button ng-click="toggleEdit()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            {{ isEditing ? 'Cancel' : 'Edit' }}
-                        </button>
+            <div class="bg-white rounded-lg border-2 border-gray-300 shadow-lg mb-8 p-6">
+                <div class="flex justify-between items-center">
+                    <h2 id="my-profile" class="text-2xl font-semibold text-gray-800">My Profile</h2>
+                    <button ng-click="toggleEdit()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-all shadow-sm">
+                        {{ isEditing ? 'Cancel' : 'Edit' }}
+                    </button>
+                </div>
+
+                <div class="flex items-center mt-6 mb-4">
+                    <div class="mr-6">
+                        <img ng-src="{{ user.profile_picture ? '/storage/profile_pictures/' + user.profile_picture : '/logo/default.png' }}" alt="Profile Picture" class="h-24 w-24 rounded-full border-2 border-gray-300 shadow-lg">
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">{{ user.name }}</h3>
+                        <p class="text-gray-600">{{ user.email }}</p>
+                    </div>
+                </div>
+
+                <div class="mb-4" ng-if="!isEditing">
+                    <strong class="text-gray-800">Bio:</strong>
+                    <p class="text-gray-600">{{ user.bio || 'No bio available' }}</p>
+                </div>
+
+                <!-- Edit Profile Form -->
+                <form ng-if="isEditing" ng-submit="updateProfile()" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="name" ng-model="user.name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     </div>
 
-                    <div class="flex items-center mb-4">
-                        <div class="mr-4">
-                            <img ng-src="{{ user.profile_picture ? '/storage/profile_pictures/' + user.profile_picture : '/logo/default.png' }}" alt="Profile Picture" class="h-20 w-20 rounded-full">
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold">{{ user.name }}</h3>
-                            <p>{{ user.email }}</p>
-                        </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" ng-model="user.email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" readonly>
                     </div>
 
-                    <div class="mb-4" ng-if="!isEditing">
-                        <strong>Bio:</strong> {{ user.bio || 'No bio available' }}
+                    <div>
+                        <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
+                        <textarea id="bio" ng-model="user.bio" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></textarea>
                     </div>
 
-                    <form ng-if="isEditing" ng-submit="updateProfile()" class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                            <input type="text" id="name" ng-model="user.name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        </div>
+                    <div>
+                        <label for="profile_picture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
+                        <input type="file" id="profile_picture" onchange="angular.element(this).scope().onFileSelect(this.files)" class="mt-1 block w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
 
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" id="email" ng-model="user.email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" readonly>
-                        </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-all">Update Profile</button>
+                </form>
+            </div>
 
-                        <div>
-                            <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
-                            <textarea id="bio" ng-model="user.bio" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
-                        </div>
-
-                        <div>
-                            <label for="profile_picture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
-                            <input type="file" id="profile_picture" onchange="angular.element(this).scope().onFileSelect(this.files)" class="mt-1 block w-full">
-                        </div>
-
-                        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Profile</button>
-                    </form>
+            <!-- My Posts Section -->
+            <div class="bg-white rounded-lg shadow-lg mb-8 p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">My Posts</h2>
+                <div ng-repeat="post in user.posts" class="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50">
+                    <h3 class="font-bold text-gray-900">{{ post.title }}</h3>
+                    <p class="text-gray-700">{{ post.content }}</p>
+                    <p class="text-gray-500 text-sm">Posted on: {{ post.created_at | date:'medium' }}</p>
+                </div>
+                <div ng-if="user.posts.length === 0" class="text-gray-500 text-center">
+                    <p>No posts available.</p>
                 </div>
             </div>
+
         </div>
     </main>
 </body>

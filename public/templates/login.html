@@ -1,36 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="socialMediaApp">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+
+    <!-- Your app scripts -->
+    <script src="app.js"></script>
+    <script src="js/controllers/authControllers.js"></script>
 </head>
-<body class="bg-gray-100 h-screen flex items-center justify-center" ng-controller="LoginController">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Welcome Back</h2>
-        <form ng-submit="login()" class="space-y-4">
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" ng-model="user.email" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+<body class="bg-light">
+    <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+        <div class="card w-100" style="max-width: 400px;">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Welcome Back</h2>
+                
+                <!-- Alert/Message Container -->
+                <div class="fixed top-4 right-4 space-y-2" ng-if="messageVisible">
+                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-md" ng-if="successMessage">
+                        <p>{{ successMessage }}</p>
+                    </div>
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md" ng-if="errorMessage">
+                        <p>{{ errorMessage }}</p>
+                    </div>
+                </div>
+
+                <form ng-submit="login()">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" ng-model="user.email" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" ng-model="user.password" required class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                </form>
+                <div class="mt-3 text-center">
+                    <p class="mb-0">Don't have an account? 
+                        <a href="#!/register" class="text-primary">Register here</a>
+                    </p>
+                </div>
             </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" id="password" ng-model="user.password" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
-            <div>
-                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Sign In
-                </button>
-            </div>
-        </form>
-        <div class="mt-4 text-center">
-            <p class="text-sm text-gray-600">
-                Don't have an account? 
-                <a href="#!/register" class="font-medium text-indigo-600 hover:text-indigo-500">Register here</a>
-            </p>
         </div>
-        <p ng-if="errorMessage" class="mt-4 text-center text-red-500">{{ errorMessage }}</p>
     </div>
+
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

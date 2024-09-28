@@ -4,7 +4,7 @@ angular.module('socialMediaApp')
 
         this.getProfile = function() {
             return $http.get(baseUrl + '/profile', {
-                cache: false
+                cache: false,
             });
         };
 

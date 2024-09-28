@@ -10,6 +10,7 @@ angular.module('socialMediaApp')
         $scope.loadProfile = function() {
             ProfileService.getProfile()
                 .then(function(response) {
+                    console.log('Profile loaded:', response.data);
                     $scope.user = response.data.user;
                     $scope.posts = response.data.posts;
                 })
@@ -18,6 +19,11 @@ angular.module('socialMediaApp')
                     $scope.showMessage('Failed to load profile. Please try again.', false);
                 });
         };
+
+        // Load profile whenever the route to profile is accessed
+        $scope.$on('$routeChangeSuccess', function() {
+            $scope.loadProfile();
+        });
 
         $scope.updateProfile = function() {
             var formData = new FormData();

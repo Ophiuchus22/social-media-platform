@@ -6,30 +6,31 @@
     <title>SocialConnect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </head>
 
 <body class="bg-gray-100" ng-controller="PostController">
-    <!-- Navigation Bar -->
-    <header class="container mx-auto flex justify-between items-center p-4">
+    <!-- Header -->
+    <header class="container mx-auto flex justify-between items-center p-4 bg-white shadow-md">
         <div class="flex items-center cursor-pointer" ng-click="goToPosts()">
-            <img src="/logo/fishbook.png" alt="Fishbook Logo" class="h-11 mr-2">
-            <h1 id="fishbonk" class="text-2xl font-bold">Fishbonk</h1>
+            <img src="/logo/fishbook.png" alt="Fishbook Logo" class="h-12 mr-3">
+            <h1 id="fishbonk" class="text-3xl font-extrabold text-blue-600">Fishbonk</h1>
         </div>
-        <div class="flex space-x-4" ng-controller="MainController">
-            <a href="#!/profile" class="hover:bg-blue-700 p-2 rounded flex items-center">
-                <img ng-src="{{ userProfilePicture }}" alt="User Profile" class="h-8 w-8 rounded-full mr-2">
-                {{ userName }}
+        <div class="flex space-x-6 items-center" ng-controller="MainController">
+            <a href="#!/profile" class="flex items-center hover:bg-blue-600 hover:text-white p-3 rounded-lg transition-all">
+                <img ng-src="{{ userProfilePicture }}?{{ randomKey }}" alt="User Profile" class="h-10 w-10 rounded-full mr-2 shadow-md">
+                <span class="font-medium">{{ userName }}</span>
             </a>
-            <button ng-click="logout()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
+            <button ng-click="logout()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-all">Logout</button>
         </div>
     </header>
 
     <!-- Alert/Message Container -->
     <div class="fixed top-4 right-4 space-y-2" ng-if="messageVisible">
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" ng-if="successMessage">
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-md" ng-if="successMessage">
             <p>{{ successMessage }}</p>
         </div>
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" ng-if="errorMessage">
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md" ng-if="errorMessage">
             <p>{{ errorMessage }}</p>
         </div>
     </div>

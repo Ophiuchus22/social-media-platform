@@ -14,11 +14,21 @@ angular.module('socialMediaApp', ['ngRoute'])
             })
             .when('/posts', {
                 templateUrl: 'templates/posts.html',
-                controller: 'PostController'
+                controller: 'PostController',
+                resolve: {
+                    auth: function(AuthService, $location) {
+                        return AuthService.isAuthenticated() || $location.path('/login');
+                    }
+                }
             })
             .when('/profile', {
                 templateUrl: 'templates/profile.html',
-                controller: 'ProfileController'
+                controller: 'ProfileController',
+                resolve: {
+                    auth: function(AuthService, $location) {
+                        return AuthService.isAuthenticated() || $location.path('/login');
+                    }
+                }
             })
             .otherwise({
                 redirectTo: '/login'
@@ -30,4 +40,13 @@ angular.module('socialMediaApp', ['ngRoute'])
 
         // Add authentication interceptor
         $httpProvider.interceptors.push('AuthInterceptor');
+    })
+    .run(function($rootScope, $location, AuthService) {
+        $rootScope.$on('$routeChangeStart', function(event, next, current) {
+            if (next.$$route && next.$$route.resolve && next.$$route.resolve.auth) {
+                if (!AuthService.isAuthenticated()) {
+                    $location.path('/login');
+                }
+            }
+        });
     });
