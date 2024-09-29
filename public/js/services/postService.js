@@ -19,4 +19,22 @@ angular.module('socialMediaApp')
         this.getCurrentUserProfile = function() {
             return $http.get('/api/current-user-profile');
         };
+
+        
+
+        this.likePost = function(postId) {
+            return $http.post('/api/posts/' + postId + '/like');
+        };
+    
+        this.getComments = function(postId) {
+            return $http.get('/api/posts/' + postId + '/comments');
+        };
+    
+        this.addComment = function(postId, comment) {
+            return $http.post('/api/posts/' + postId + '/comments', comment);
+        };
+    
+        this.deleteComment = function(postId, commentId) {
+            return $http.delete('/api/posts/' + postId + '/comments/' + commentId);
+        };
     });

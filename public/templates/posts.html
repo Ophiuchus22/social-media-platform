@@ -45,7 +45,7 @@
             <div class="col-lg-6">
 
                 <!-- Post Creation Section -->
-                <div class="card mb-4">
+                <div class="card mb-4 border-3 shadow p-3">
                     <div class="card-body">
                         <h5 class="card-title">Create Post</h5>
                         <form ng-submit="createPost()">
@@ -60,7 +60,7 @@
                 </div>
 
                 <!-- Displayed Posts Section -->
-                <div ng-repeat="post in posts" class="card mb-4">
+                <div ng-repeat="post in posts" class="card mb-4 border-2 shadow p-3">
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
                             <div class="d-flex align-items-center">
@@ -89,7 +89,7 @@
                                     <button type="submit" class="btn btn-success">Save</button>
                                     <button type="button" ng-click="post.editing = false" class="btn btn-secondary">Cancel</button>
                                 </div>
-                            </form>
+                            </form> 
                         </div>
 
                         <hr>
