@@ -71,10 +71,10 @@
                                 </div>
                             </div>
                             <div class="btn-group">
-                                <button ng-if="post.can_edit" ng-click="editPost(post)" class="btn btn-sm btn-outline-primary">
+                                <button ng-if="post.can_edit" ng-click="editPost(post)" class="btn-sm btn-outline-primary">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button ng-if="post.can_delete" ng-click="deletePost(post)" class="btn btn-sm btn-outline-danger">
+                                <button ng-if="post.can_delete" ng-click="deletePost(post)" class="btn-sm btn-outline-danger">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -95,8 +95,8 @@
                         <hr>
                         <div class="d-flex justify-content-between">
                             <button ng-click="toggleLike(post)" class="btn btn-link text-decoration-none">
-                                <i class="fas" ng-class="{'fa-thumbs-down': post.is_liked, 'fa-thumbs-up': !post.is_liked}"></i>
-                                {{ post.is_liked ? '' : '' }} ({{ post.likes_count }})
+                                <!-- <i class="fas" ng-class="{'fa-thumbs-down': post.is_liked, 'fa-thumbs-up': !post.is_liked}"></i> -->
+                                {{ post.is_liked ? '❤️' : '🤍' }} ({{ post.likes_count }})
                             </button>
                             <button ng-click="toggleCommentBox(post)" class="btn btn-link text-decoration-none">
                                 <i class="fas fa-comment"></i> Comment

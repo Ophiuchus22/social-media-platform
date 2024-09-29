@@ -101,4 +101,22 @@ class PostController extends Controller
 
         return asset('logo/default.png');
     }
+
+    public function getComments($postId)
+    {
+        $post = Post::with(['comments.user' => function($query) {
+            $query->select('id', 'name', 'profile_picture');
+        }])->findOrFail($postId);
+
+        if ($post) {
+            $comments = $post->comments->map(function ($comment) {
+                $comment->user->profile_picture = $this->getProfilePictureUrl($comment->user->profile_picture);
+                return $comment;
+            });
+            return response()->json(['comments' => $comments]);
+        } else {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+    }
+
 }

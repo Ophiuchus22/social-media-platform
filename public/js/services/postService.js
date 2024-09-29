@@ -20,21 +20,26 @@ angular.module('socialMediaApp')
             return $http.get('/api/current-user-profile');
         };
 
-        
 
-        this.likePost = function(postId) {
-            return $http.post('/api/posts/' + postId + '/like');
+
+        this.toggleLike = function(postId) {
+            return $http.post('/api/posts/' + postId + '/toggle-like');
         };
     
         this.getComments = function(postId) {
-            return $http.get('/api/posts/' + postId + '/comments');
+            return $http.get('/api/posts/' + postId + '/comments')
+                .then(function(response) {
+                    console.log('Raw response from server:', response);
+                    return response.data.comments;  // Make sure we're returning the comments array
+                });
         };
+        
     
         this.addComment = function(postId, comment) {
             return $http.post('/api/posts/' + postId + '/comments', comment);
         };
     
-        this.deleteComment = function(postId, commentId) {
-            return $http.delete('/api/posts/' + postId + '/comments/' + commentId);
+        this.deleteComment = function(commentId) {
+            return $http.delete('/api/comments/' + commentId);
         };
     });

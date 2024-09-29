@@ -110,10 +110,10 @@
                                         </div>
                                     </div>
                                     <div class="btn-group">
-                                        <button ng-click="editPost(post)" class="btn btn-sm btn-outline-primary">
+                                        <button ng-click="editPost(post)" class="btn-sm btn-outline-primary">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button ng-click="deletePost(post)" class="btn btn-sm btn-outline-danger">
+                                        <button ng-click="deletePost(post)" class="btn-sm btn-outline-danger">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
@@ -136,8 +136,8 @@
                         
                                 <div class="d-flex justify-content-between">
                                     <button ng-click="toggleLike(post)" class="btn btn-link text-decoration-none">
-                                        <i class="fas" ng-class="{'fa-thumbs-down': post.is_liked, 'fa-thumbs-up': !post.is_liked}"></i> 
-                                        {{ post.is_liked ? '' : '' }} ({{ post.likes_count }})
+                                        <!-- <i class="fas" ng-class="{'fa-thumbs-down': post.is_liked, 'fa-thumbs-up': !post.is_liked}"></i>  -->
+                                        {{ post.is_liked ? '❤️' : '🤍' }} ({{ post.likes_count }})
                                     </button>
                                     <button ng-click="post.showComments = !post.showComments" class="btn btn-link text-decoration-none">
                                         <i class="fas fa-comment"></i> Comment
@@ -145,23 +145,22 @@
                                 </div>
                         
                                 <!-- Comment Section -->
-                                <div ng-if="post.showComments" class="mt-3">
+                                <div class="mt-3" ng-if="post.showComments">
                                     <div class="d-flex align-items-start mb-2" ng-repeat="comment in post.comments">
-                                        <div class="bg-light p-2 rounded w-100">
-                                            <div class="d-flex justify-content-between">
-                                                <strong>{{ comment.user.name }}</strong>
-                                                <button class="btn btn-sm text-danger" ng-click="deleteComment(post, comment)">Delete</button>
-                                            </div>
-                                            <p class="mb-0">{{ comment.content }}</p>
+                                      <div class="bg-light p-2 rounded w-100">
+                                        <div class="d-flex justify-content-between">
+                                          <strong>{{ comment.user.name }}</strong>
+                                          <button class="btn btn-sm text-danger" ng-click="deleteComment(post, comment)" ng-if="comment.user.id === user.id">Delete</button>
                                         </div>
+                                        {{ comment.content }}
+                                      </div>
                                     </div>
-                                    <form ng-submit="addComment(post)" class="d-flex mt-2">
+                                    
+                                    <form ng-submit="addComment(post)" class="d-flex">
                                         <input ng-model="post.newComment" required class="form-control me-2" placeholder="Write a comment...">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
+                                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
                                     </form>
-                                </div>
+                                </div>                                
                             </div>
                         </div>
                         

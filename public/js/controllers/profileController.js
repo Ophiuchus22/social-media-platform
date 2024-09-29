@@ -13,6 +13,10 @@ angular.module('socialMediaApp')
                     console.log('Profile loaded:', response.data);
                     $scope.user = response.data.user;
                     $scope.posts = response.data.posts;
+                    // Load comments for each post
+                    $scope.posts.forEach(function(post) {
+                        $scope.loadComments(post);
+                    });
                 })
                 .catch(function(error) {
                     console.error('Error loading profile:', error);
@@ -123,7 +127,7 @@ angular.module('socialMediaApp')
           };
       
           $scope.toggleLike = function(post) {
-            PostService.likePost(post.id)
+            PostService.toggleLike(post.id)
                 .then(function(response) {
                     post.is_liked = response.data.is_liked;
                     post.likes_count = response.data.likes_count;
@@ -137,29 +141,46 @@ angular.module('socialMediaApp')
           $scope.addComment = function(post) {
             PostService.addComment(post.id, { content: post.newComment })
                 .then(function(response) {
-                    if (!post.comments) {
-                        post.comments = [];
+                    // Ensure post.comments is an array
+                    if (!Array.isArray(post.comments)) {
+                        post.comments = [];  // Initialize as an empty array
                     }
-                    post.comments.push(response.data);
-                    post.newComment = '';
+                    post.comments.push(response.data);  // Add the new comment
+                    post.newComment = '';  // Clear the comment input
+                    post.showComments = true;  // Ensure comments are visible
                 })
                 .catch(function(error) {
                     console.error('Error adding comment:', error);
                     $scope.showMessage('Failed to add comment. Please try again.', false);
                 });
-          };
+          };              
       
           $scope.deleteComment = function(post, comment) {
-            PostService.deleteComment(post.id, comment.id)
+            PostService.deleteComment(comment.id)
                 .then(function() {
                     var index = post.comments.indexOf(comment);
                     post.comments.splice(index, 1);
+                    $scope.showMessage('Post deleted successfully!', true);
                 })
                 .catch(function(error) {
                     console.error('Error deleting comment:', error);
                     $scope.showMessage('Failed to delete comment. Please try again.', false);
                 });
-          };      
+         };  
+         
+         $scope.loadComments = function(post) {
+            PostService.getComments(post.id)
+                .then(function(comments) {
+                    console.log('Comments loaded for post:', post.id, comments);
+                    post.comments = comments || [];
+                    post.showComments = true;
+                    console.log('Post comments after loading:', post.comments);
+                })
+                .catch(function(error) {
+                    console.error('Error loading comments for post:', post.id, error);
+                    $scope.showMessage('Failed to load comments. Please try again.', false);
+                });
+        };         
 
         // Load profile on init
         $scope.loadProfile();
