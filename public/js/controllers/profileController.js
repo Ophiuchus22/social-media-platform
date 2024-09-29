@@ -20,7 +20,6 @@ angular.module('socialMediaApp')
                 });
         };
 
-        // Load profile whenever the route to profile is accessed
         $scope.$on('$routeChangeSuccess', function() {
             $scope.loadProfile();
         });

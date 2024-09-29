@@ -57,10 +57,6 @@ angular.module('socialMediaApp')
                         post.user.profile_picture = post.user.profile_picture || '/logo/default.png';
                         return post;
                     });
-                    // // Set the current user's profile picture
-                    // if ($scope.posts.length > 0 && $scope.posts[0].user) {
-                    //     $scope.userProfilePicture = $scope.posts[0].user.profile_picture;
-                    // }
                 })
                 .catch(function(error) {
                     console.error('Error loading posts:', error);
