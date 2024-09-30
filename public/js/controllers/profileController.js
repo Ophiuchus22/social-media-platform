@@ -43,6 +43,7 @@ angular.module('socialMediaApp')
                     $scope.isEditing = false;
                     $scope.showMessage('Profile updated successfully', true);
                     $scope.loadProfile();
+                    $scope.closeModal();
                 })
                 .catch(function(error) {
                     console.error('Error updating profile:', error);
@@ -54,9 +55,33 @@ angular.module('socialMediaApp')
             $scope.profilePicture = files[0];
         };
 
-        $scope.toggleEdit = function() {
-            $scope.isEditing = !$scope.isEditing;
+        // Update modal handling functions
+        $scope.openModal = function() {
+            $('#editProfileModal').modal('show');
         };
+
+        $scope.closeModal = function() {
+            $('#editProfileModal').modal('hide');
+            $scope.isEditing = false;
+        };
+        
+        $scope.toggleEdit = function() {
+            if ($scope.isEditing) {
+                $scope.closeModal();
+            } else {
+                $scope.isEditing = true;
+                $scope.openModal();
+            }
+        };    
+
+        // Add event listener for modal hidden event
+        angular.element(document).ready(function () {
+            $('#editProfileModal').on('hidden.bs.modal', function () {
+                $scope.$apply(function() {
+                    $scope.isEditing = false;
+                });
+            });
+        });
 
         $scope.goToPosts = function() {
             $location.path('/posts');
