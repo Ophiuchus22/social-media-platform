@@ -14,6 +14,15 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $posts = Post::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
+        // Ensure full URL for the profile picture if it exists
+        if ($user->profile_picture) {
+            $user->profile_picture = asset('storage/profile_pictures/' . $user->profile_picture);
+        } else {
+            // Provide a default profile picture if none is available
+            $user->profile_picture = asset('storage/profile_pictures/default.png');
+        }
+
         return response()->json([
             'user' => $user,
             'posts' => $posts

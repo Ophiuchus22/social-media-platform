@@ -42,4 +42,15 @@ class CommentController extends Controller
             return response()->json(['error' => 'Failed to delete comment'], 500);
         }
     }
+
+    // Add the index method to retrieve comments for a post
+    public function index(Post $post)
+    {
+        // Load the comments along with the user who posted them
+        $comments = $post->comments()->with('user')->get();
+
+        return response()->json([
+            'comments' => $comments
+        ]);
+    }
 }

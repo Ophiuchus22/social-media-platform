@@ -21,6 +21,9 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('posts', PostController::class);
+
+    Route::get('/posts/{post}/comments', [CommentController::class, 'index']);
+
     Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
     Route::post('/posts/{post}/toggle-like', [LikeController::class, 'toggleLike']);
