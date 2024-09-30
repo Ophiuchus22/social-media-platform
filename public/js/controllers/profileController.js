@@ -39,9 +39,10 @@ angular.module('socialMediaApp')
 
             ProfileService.updateProfile(formData)
                 .then(function(response) {
-                    $scope.user = response.data.user;
+                    // $scope.user = response.data.user;
                     $scope.isEditing = false;
                     $scope.showMessage('Profile updated successfully', true);
+                    $scope.loadProfile();
                 })
                 .catch(function(error) {
                     console.error('Error updating profile:', error);
