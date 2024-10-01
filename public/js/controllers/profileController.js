@@ -16,6 +16,7 @@ angular.module('socialMediaApp')
                     // Load comments for each post
                     $scope.posts.forEach(function(post) {
                         $scope.loadComments(post);
+                        post.likes_count = post.likes_count || 0;
                     });
                 })
                 .catch(function(error) {
@@ -174,6 +175,8 @@ angular.module('socialMediaApp')
                     post.comments.push(response.data);  // Add the new comment
                     post.newComment = '';  // Clear the comment input
                     post.showComments = true;  // Ensure comments are visible
+
+                    post.comments_count = (post.comments_count || 0) + 1;
                 })
                 .catch(function(error) {
                     console.error('Error adding comment:', error);
@@ -186,6 +189,8 @@ angular.module('socialMediaApp')
                 .then(function() {
                     var index = post.comments.indexOf(comment);
                     post.comments.splice(index, 1);
+
+                    post.comments_count = Math.max((post.comments_count || 0) - 1, 0);
                     $scope.showMessage('Post deleted successfully!', true);
                 })
                 .catch(function(error) {
@@ -199,7 +204,8 @@ angular.module('socialMediaApp')
                 .then(function(comments) {
                     console.log('Comments loaded for post:', post.id, comments);
                     post.comments = comments || [];
-                    post.showComments = true;
+                    post.showComments = false;
+                    post.comments_count = post.comments.length;
                     console.log('Post comments after loading:', post.comments);
                 })
                 .catch(function(error) {

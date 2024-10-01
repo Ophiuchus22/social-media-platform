@@ -13,7 +13,7 @@ class PostController extends Controller
     public function index()
     {
         return Post::with(['user', 'comments.user', 'likes'])
-            ->withCount('likes')
+            ->withCount('likes', 'comments')
             ->latest()
             ->get()
             ->map(function ($post) {

@@ -136,6 +136,8 @@ angular.module('socialMediaApp')
                     }
                     post.comments.push(response.data);
                     post.newComment = '';
+
+                    post.comments_count = (post.comments_count || 0) + 1;
                 })
                 .catch(function(error) {
                     console.error('Error adding comment:', error);
@@ -150,6 +152,8 @@ angular.module('socialMediaApp')
                 .then(function() {
                     var index = post.comments.indexOf(comment);
                     post.comments.splice(index, 1);
+
+                    post.comments_count = Math.max((post.comments_count || 0) - 1, 0);
                     $scope.showMessage('Comment deleted successfully!', true); // Show success message
                 })
                 .catch(function(error) {
