@@ -100,6 +100,25 @@ angular.module('socialMediaApp')
         };
 
         //ANG POOOOOST!!!!!
+        $scope.createPost = function() {
+            if (!$scope.newPost || !$scope.newPost.content) {
+                $scope.showMessage('Please enter some content for your post.', false);
+                return;
+            }
+        
+            PostService.createPost({ content: $scope.newPost.content })
+                .then(function(response) {
+                    console.log('Post created:', response.data);
+                    $scope.posts.unshift(response.data);  // Add the new post to the beginning of the posts array
+                    $scope.newPost = {};  // Clear the new post input
+                    $scope.showMessage('Post created successfully!', true);
+                })
+                .catch(function(error) {
+                    console.error('Error creating post:', error);
+                    $scope.showMessage('Failed to create post. Please try again.', false);
+                });
+        };
+        
         $scope.loadPosts = function() {
             PostService.getPosts()
                 .then(function(response) {
