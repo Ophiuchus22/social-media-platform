@@ -234,6 +234,7 @@
                                 </div>
 
                                 <form ng-submit="addComment(post)" class="d-flex">
+                                    <img ng-src="{{ user.profile_picture }}" alt="{{ user.name }}" class="rounded-circle me-2 post-user-image">
                                     <input ng-model="post.newComment" required class="form-control me-2 comment-input" placeholder="Write a comment...">
                                     <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
                                 </form>
