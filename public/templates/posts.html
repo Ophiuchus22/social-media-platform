@@ -60,6 +60,25 @@
         border: 1px solid #ccc;
         padding: 10px;
     }
+    /* Profile Picture and Notification Dropdown */
+    .dropdown-menu {
+        border-radius: 0.5rem;
+        padding: 0;
+    }
+
+    .dropdown-header {
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
     </style>
 </head>
 
@@ -71,8 +90,21 @@
                 <img src="/logo/2.png" alt="Fishbook Logo" class="img-fluid me-3" style="height: 50px;">
             </div>
             <div class="d-flex align-items-center" ng-controller="MainController">
+
+                <!-- Notification Icon -->
+                <div class="dropdown me-4">
+                    <a class="text-dark text-decoration-none position-relative" href="#" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell fa-lg text-primary"></i>
+                    </a>
+                    <!-- Empty Notification Dropdown -->
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="notificationDropdown" style="min-width: 200px;">
+                        <li class="dropdown-header">Notifications</li>
+                        <li class="dropdown-item text-center text-muted">No new notifications</li>
+                    </ul>
+                </div>
+                
+                <!-- Profile Picture Dropdown -->
                 <div class="dropdown">
-                    <!-- Profile Picture -->
                     <a class="d-flex align-items-center text-decoration-none text-dark" href="#" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <img ng-src="{{ userProfilePicture }}?{{ randomKey }}" alt="User Profile" class="rounded-circle me-2 shadow-sm" style="width: 40px; height: 40px;">
                     </a>
@@ -94,8 +126,7 @@
                 </div>
             </div>
         </div>
-    </header>
-
+    </header>    
 
     <!-- Alert/Message Container -->
     <div class="alert-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050;">
@@ -201,6 +232,7 @@
                         </div>
 
                         <form ng-submit="addComment(post)" class="d-flex">
+                            <img ng-src="{{ post.user.profile_picture }}" alt="{{ post.user.name }}" class="rounded-circle me-2 post-user-image">
                             <input ng-model="post.newComment" required class="form-control me-2 comment-input" placeholder="Write a comment...">
                             <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
                         </form>
