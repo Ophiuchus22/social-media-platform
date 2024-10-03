@@ -95,13 +95,17 @@
                 <div class="dropdown me-4">
                     <a class="text-dark text-decoration-none position-relative" href="#" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-bell fa-lg text-primary"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ notifications.length }}</span>
                     </a>
-                    <!-- Empty Notification Dropdown -->
+                
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="notificationDropdown" style="min-width: 200px;">
                         <li class="dropdown-header">Notifications</li>
-                        <li class="dropdown-item text-center text-muted">No new notifications</li>
+                        <li ng-repeat="notification in notifications" class="dropdown-item">
+                            {{ notification.type }} - {{ notification.post.title }}
+                            <button class="btn btn-link text-decoration-none" ng-click="markAsRead(notification)">Mark as read</button>
+                        </li>
                     </ul>
-                </div>
+                </div>                
                 
                 <!-- Profile Picture Dropdown -->
                 <div class="dropdown">
@@ -232,7 +236,7 @@
                         </div>
 
                         <form ng-submit="addComment(post)" class="d-flex">
-                            <img ng-src="{{ post.user.profile_picture }}" alt="{{ post.user.name }}" class="rounded-circle me-2 post-user-image">
+                            <img ng-src="{{ userProfilePicture }}?{{ randomKey }}" alt="User Profile" class="rounded-circle me-2 shadow-sm" style="width: 40px; height: 40px;">
                             <input ng-model="post.newComment" required class="form-control me-2 comment-input" placeholder="Write a comment...">
                             <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
                         </form>

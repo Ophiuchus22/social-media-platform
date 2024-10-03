@@ -30,7 +30,6 @@ angular.module('socialMediaApp')
         }));
 
         var channel = pusher.subscribe('private-user.' + userId);
-
         channel.bind('new-notification', function(data) {
             $scope.notifications.unshift(data.notification);
             $scope.$apply();

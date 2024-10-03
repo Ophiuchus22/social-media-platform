@@ -45,7 +45,7 @@ class PostController extends Controller
         $post->can_delete = true; // The creator can also delete their new post
         $post->is_liked = false; // A new post is not liked by default
         
-        event(new NewPost($post));
+        // event(new NewPost($post));
 
         return $post;
     }

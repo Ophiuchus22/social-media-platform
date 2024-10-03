@@ -30,12 +30,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/current-user-profile', [PostController::class, 'getCurrentUserProfile']);
 
-    // New routes for notifications
+    // Notification Routes
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::put('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
 
+
      // New routes for profile management
      Route::get('/profile', [UserController::class, 'show']);
      Route::post('/profile', [UserController::class, 'update']);
+});
+
+Route::post('/broadcasting/auth', function (Request $request) {
+    return Broadcast::auth($request);
 });

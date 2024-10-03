@@ -4,15 +4,21 @@ namespace App\Listeners;
 
 use App\Events\NewLike;
 use App\Models\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 class CreateNewLikeNotification
 {
     public function handle(NewLike $event)
     {
         Notification::create([
-            'user_id' => $event->post->user_id, // Notify the post's owner
-            'post_id' => $event->post->id,      // ID of the post that was liked
-            'type' => 'new_like',
+            'user_id' => $event->like->post->user_id,
+            'post_id' => $event->like->post_id,
+            'type' => 'like',
+            'is_read' => false,
         ]);
+
+        // Broadcast the event to the user
+        broadcast(new NewLike($event->like));
     }
 }
