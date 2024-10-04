@@ -26,14 +26,27 @@ angular.module('socialMediaApp')
 
         // Initialize Pusher
         var pusher = $pusher(new Pusher('8a5955dbdf2f0cd9eeb5', {
-            cluster: 'ap1'
+            cluster: 'ap1',
+            encrypted: true
         }));
 
         var channel = pusher.subscribe('private-user.' + userId);
-        channel.bind('new-notification', function(data) {
-            $scope.notifications.unshift(data.notification);
+        
+        channel.bind('App\\Events\\NewPost', function(data) {
+            $scope.notifications.unshift(data);
             $scope.$apply();
         });
+
+        channel.bind('App\\Events\\NewComment', function(data) {
+            $scope.notifications.unshift(data);
+            $scope.$apply();
+        });
+
+        channel.bind('App\\Events\\NewLike', function(data) {
+            $scope.notifications.unshift(data);
+            $scope.$apply();
+        });
+
 
         $scope.loadNotifications();
     });

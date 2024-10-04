@@ -20,7 +20,8 @@ class CommentController extends Controller
             'content' => $validated['content'],
         ]);
 
-        // event(new NewComment($post, $comment));
+        // Trigger the NewComment event
+        //event(new NewComment($comment));
     
         return $comment->load('user');
     }

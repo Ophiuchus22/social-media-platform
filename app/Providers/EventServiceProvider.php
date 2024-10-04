@@ -6,6 +6,12 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use App\Events\NewPost;
+use App\Events\NewComment;
+use App\Events\NewLike;
+use App\Listeners\CreateNewPostNotification;
+use App\Listeners\CreateNewCommentNotification;
+use App\Listeners\CreateNewLikeNotification;
 
 class EventServiceProvider extends ServiceProvider
 {
