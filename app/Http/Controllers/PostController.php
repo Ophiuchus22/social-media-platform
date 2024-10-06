@@ -21,6 +21,7 @@ class PostController extends Controller
                 $post->can_edit = $post->user_id === auth()->id();
                 $post->can_delete = $post->user_id === auth()->id(); 
                 $post->user->profile_picture = $this->getProfilePictureUrl($post->user->profile_picture);
+                $post->picture = $this->getPostPictureUrl($post->picture);
                 $post->comments->each(function ($comment) {
                     $comment->user->profile_picture = $this->getProfilePictureUrl($comment->user->profile_picture);
                 });
@@ -32,9 +33,20 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'content' => 'required|string|max:1000',
+            'picture' => 'nullable|image|max:2048',
         ]);
 
-        $post = $request->user()->posts()->create($validated);
+        $post = new Post($validated);
+        $post->user_id = $request->user()->id;
+
+        if ($request->hasFile('picture')) {
+            $path = $request->file('picture')->store('post_pictures', 'public');
+            $post->picture = $path;
+        }
+
+        $post->save();
+
+        //$post = $request->user()->posts()->create($validated);
 
         // Trigger the NewPost event
         //event(new NewPost($post));
@@ -49,6 +61,21 @@ class PostController extends Controller
         $post->is_liked = false; // A new post is not liked by default
 
         return $post;
+    }
+
+    private function getPostPictureUrl($picture)
+    {
+        if (!$picture) {
+            return null;
+        }
+
+        $fullPath = 'post_pictures/' . basename($picture);
+
+        if (Storage::disk('public')->exists($fullPath)) {
+            return Storage::disk('public')->url($fullPath);
+        }
+
+        return null;
     }
 
     public function show(Post $post)
@@ -74,6 +101,11 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
+         
+        if ($post->picture) {
+            Storage::disk('public')->delete($post->picture);
+        }
+
         $post->delete();
         return response()->noContent();
     }

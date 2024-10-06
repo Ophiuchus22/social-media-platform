@@ -1,11 +1,30 @@
 angular.module('socialMediaApp')
     .service('PostService', function($http) {
         this.getPosts = function() {
-            return $http.get('/api/posts');
+            return $http.get('/api/posts').then(function(response) {
+                // Process the posts to ensure picture URLs are correct
+                response.data = response.data.map(function(post) {
+                    if (post.picture && !post.picture.startsWith('http')) {
+                        post.picture = '/storage/' + post.picture;
+                    }
+                    return post;
+                });
+                return response;
+            });
         };
 
         this.createPost = function(post) {
-            return $http.post('/api/posts', post);
+            var formData = new FormData();
+            formData.append('content', post.content);
+            
+            if (post.picture) {
+                formData.append('picture', post.picture);
+            }
+
+            return $http.post('/api/posts', formData, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            });
         };
 
         this.updatePost = function(postId, post) {

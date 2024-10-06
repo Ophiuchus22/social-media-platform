@@ -76,6 +76,7 @@ angular.module('socialMediaApp')
                     newPost.is_liked = newPost.is_liked || false;
                     $scope.posts.unshift(newPost);
                     $scope.newPost = {}; // Reset input
+                    $scope.newPost.picture = null;
                    
                     // Reload posts to update the profile picture and other data
                     $scope.loadPosts();
@@ -86,6 +87,29 @@ angular.module('socialMediaApp')
                     $scope.showMessage('Failed to create post. Please try again.', false);
                 });
         };
+
+        $scope.onFileSelect = function(file) {
+            if (file) {
+                $scope.newPost.picture = file; // Mark file as selected
+            } else {
+                $scope.newPost.picture = null; // Reset if no file
+            }
+        }; 
+        
+        $scope.isImageModalOpen = false;
+        $scope.currentImage = null;
+        
+        // Function to open the image modal
+        $scope.openImageModal = function(imageUrl) {
+            $scope.currentImage = imageUrl;
+            $scope.isImageModalOpen = true;
+        };
+        
+        // Function to close the image modal
+        $scope.closeImageModal = function() {
+            $scope.isImageModalOpen = false;
+            $scope.currentImage = null;
+        };        
 
         // Toggle editing mode
         $scope.editPost = function(post) {
@@ -100,6 +124,7 @@ angular.module('socialMediaApp')
                     $scope.posts[index] = Object.assign({}, $scope.posts[index], response.data);
                     post.editing = false; // Exit editing mode after saving
                     $scope.showMessage('Post updated successfully!', true);
+                    $scope.loadPosts();
                 })
                 .catch(function(error) {
                     console.error('Error updating post:', error);

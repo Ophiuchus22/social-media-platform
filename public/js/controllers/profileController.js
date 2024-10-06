@@ -6,13 +6,20 @@ angular.module('socialMediaApp')
         $scope.successMessage = '';
         $scope.messageVisible = false;
         $scope.isEditing = false;
+        $scope.newPost = {}; // Initialize newPost object
 
         $scope.loadProfile = function() {
             ProfileService.getProfile()
                 .then(function(response) {
                     console.log('Profile loaded:', response.data);
                     $scope.user = response.data.user;
-                    $scope.posts = response.data.posts;
+                    $scope.posts = response.data.posts.map(function(post) {
+                        // Ensure the picture URL is complete
+                        if (post.picture && !post.picture.startsWith('http')) {
+                            post.picture = '/storage/' + post.picture;
+                        }
+                        return post;
+                    });
                     // Load comments for each post
                     $scope.posts.forEach(function(post) {
                         $scope.loadComments(post);
@@ -106,17 +113,50 @@ angular.module('socialMediaApp')
                 return;
             }
         
-            PostService.createPost({ content: $scope.newPost.content })
+            var postData = {
+                content: $scope.newPost.content,
+                picture: $scope.newPost.picture
+            };
+        
+            PostService.createPost(postData)
                 .then(function(response) {
                     console.log('Post created:', response.data);
-                    $scope.posts.unshift(response.data);  // Add the new post to the beginning of the posts array
-                    $scope.newPost = {};  // Clear the new post input
+                    var newPost = response.data;
+                    // Ensure the picture URL is complete
+                    if (newPost.picture && !newPost.picture.startsWith('http')) {
+                        newPost.picture = '/storage/' + newPost.picture;
+                    }
+                    $scope.posts.unshift(newPost);
+                    $scope.newPost = {};
                     $scope.showMessage('Post created successfully!', true);
                 })
                 .catch(function(error) {
                     console.error('Error creating post:', error);
                     $scope.showMessage('Failed to create post. Please try again.', false);
                 });
+        };
+
+        // Updated onFileSelect function for post picture
+        $scope.onPostPictureSelect = function(files) {
+            if (files.length > 0) {
+                $scope.newPost.picture = files[0];
+            } else {
+                $scope.newPost.picture = null;
+            }
+        };
+
+        // Modal functionality for image view
+        $scope.isImageModalOpen = false;
+        $scope.currentImage = null;
+
+        $scope.openImageModal = function(imageUrl) {
+            $scope.currentImage = imageUrl;
+            $scope.isImageModalOpen = true;
+        };
+
+        $scope.closeImageModal = function() {
+            $scope.isImageModalOpen = false;
+            $scope.currentImage = null;
         };
         
         $scope.loadPosts = function() {
