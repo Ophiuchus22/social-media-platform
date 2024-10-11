@@ -159,6 +159,7 @@ angular.module('socialMediaApp')
                     if (!post.comments) {
                         post.comments = [];
                     }
+                    response.data.user.profile_picture = $scope.userProfilePicture || '/logo/default.png';
                     post.comments.push(response.data);
                     post.newComment = '';
 
